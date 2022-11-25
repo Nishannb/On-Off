@@ -314,10 +314,12 @@ nav .nav-button:disabled{
   border: 15px;
   overflow: hidden;
   margin: 10px;
+  border-radius: 50%;
  }
 
  .img-container img{
   width: 100%;
+  
  }
 
  /* --------------Chat Display Part -------------- */
@@ -328,9 +330,22 @@ nav .nav-button:disabled{
   overflow-y:auto;
  }
 
+ /* ---------------- Chat Display component section page -------------- */
+
+ .chat-display,
+ .matches{
+  padding: 20px;
+  height: 60vh;
+  overflow-y: auto;
+ }
+
+ /* ---------------- Chat Display component section page -------------- */
+
  /* --------------Chat Input Part -------------- */
  .chat-input{
   padding: 20px;
   display: flex;
   flex-direction: column;
  }
+
+

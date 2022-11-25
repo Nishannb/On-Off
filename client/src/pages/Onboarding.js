@@ -1,10 +1,16 @@
 import { useState } from "react";
 import Nav from "../components/Nav";
+import { useCookies } from 'react-cookie'
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const OnBoarding = ()=>{
 
+    let navigate = useNavigate('')
+
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const[formData, setFormData] = useState({
-        user_id:'',
+        user_id: cookies.UserId,
         firstname: '',
         dob_day:"",
         dob_month: "",
@@ -12,21 +18,26 @@ const OnBoarding = ()=>{
         show_gender: false,
         gender_identity: "man",
         gender_interest: "woman",
-        email:"",
         url:"",
         about:"",
         matches:[]
     })
 
-    const handleSubmit =()=>{
-        console.log('submmited')
+    const handleSubmit =async(e)=>{
+        e.preventDefault();
+        try {
+            const response = await axios.put('http://localhost:8000/user', {formData});
+            const success = response.status === 200;
+            if(success) navigate('/dashboard');
+        } catch(e){
+            console.log(e)
+        }
     }
 
     const handleChange =(e)=>{
         console.log(e)
         const value = e.target.type ==='checkbox' ? e.target.checked : e.target.value
         const name = e.target.name
-        console.log("value" + value, 'name' + name)
 
         setFormData((prevState)=>({
             ...prevState,
@@ -34,7 +45,6 @@ const OnBoarding = ()=>{
         }))
     }
 
-    console.log(formData)
     return(
         <>
             <Nav minimal={true} setShowModal={()=>{}} showModal={false} />
@@ -73,7 +83,7 @@ const OnBoarding = ()=>{
 
                         <label htmlFor="show-gender">Show gender on my profile</label>
                          <input 
-                            type="checkbox" id="show-gender" name="show_gender"required value='more' onChange={handleChange}
+                            type="checkbox" id="show-gender" name="show_gender" value='more' onChange={handleChange}
                             checked={formData.show_gender} 
                          />
 
@@ -117,7 +127,7 @@ const OnBoarding = ()=>{
                         onChange={handleChange}
                     />
                     <div className="photo-container">
-                        <img src={formData.url} alt='Profile pic' />
+                        {formData.url && <img src={formData.url} alt='Profile pic' />}
                     </div>
                     </section>
                 </form>
